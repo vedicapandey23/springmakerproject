@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+	
+	
+	<http auto-config="true">
+	<intercept-url pattern="/cloginsecurity"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	<intercept-url pattern="/loginsecurity"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	<intercept-url pattern="/cregisteruser"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	<intercept-url pattern="/registeruser"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	<intercept-url pattern="/resources/**"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	
+	
+	<intercept-url pattern="/cregisteruser1"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	
+	<intercept-url pattern="/cloginfailure"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+	
+	<intercept-url pattern="/*" access="ROLE_MAKER"/>
+	<form-login login-page="/cloginsecurity" authentication-failure-url="/cloginfailure"/>  
+	<access-denied-handler error-page="/caccessdenied"/>
+	</http>
+	
+	<beans:bean id="pencoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>	
+	<beans:bean id="ds1" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+<beans:property name="url" value="jdbc:oracle:thin:@10.1.50.198:1521:orcl"/>
+<beans:property name="username" value="sh"/>
+<beans:property name="password" value="sh"/>
+</beans:bean>
+
+
+<authentication-manager >
+	<authentication-provider>
+	<password-encoder ref="pencoder"/>
+	<jdbc-user-service data-source-ref="ds1" 
+	users-by-username-query="select username,password1,enabled from uservedica27 where username=?"
+	authorities-by-username-query="select username1,authority from authoritiesvedica27 where username1=?"
+	
+	></jdbc-user-service>
+	</authentication-provider> 
+	
+	
+	 
+	</authentication-manager>
+	
+	</beans:beans>
